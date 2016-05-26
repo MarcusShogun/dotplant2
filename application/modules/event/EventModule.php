@@ -25,10 +25,9 @@ class EventModule extends BaseModule implements BootstrapInterface
     public function bootstrap($app)
     {
         foreach ($app->modules as $module) {
-            if (is_object($module) && $module instanceof EventInterface) {
-                $module->attachEventsHandlers();
-            } elseif (is_array($module) && in_array(EventInterface::class, class_implements($module['class']), false)) {
-                $module['class']::attachEventsHandlers();
+            $class = is_object($module) ? get_class($module) : $module['class'];
+            if (in_array(EventInterface::class, class_implements($class, false))) {
+                $class::attachEventsHandlers();
             }
         }
     }
